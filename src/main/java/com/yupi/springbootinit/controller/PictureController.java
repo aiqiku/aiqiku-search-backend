@@ -9,6 +9,7 @@ import com.yupi.springbootinit.model.dto.picture.PictureQueryRequest;
 import com.yupi.springbootinit.model.entity.Picture;
 import com.yupi.springbootinit.service.PictureService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +42,12 @@ public class PictureController {
                                                         HttpServletRequest request) {
         int current = pictureQueryRequest.getCurrent();
         int pageSize = pictureQueryRequest.getPageSize();
+        String searchText = pictureQueryRequest.getSearchText();
+        if (StringUtils.isBlank(searchText)){
+            searchText = "小黑子";
+        }
         ThrowUtils.throwIf(pageSize > 20, ErrorCode.PARAMS_ERROR);
-        Page<Picture> picturePage = pictureService.searchPicture(pictureQueryRequest.getSearchText(), current, pageSize);
+        Page<Picture> picturePage = pictureService.searchPicture(searchText, current, pageSize);
         return ResultUtils.success(picturePage);
     }
 
